@@ -29,8 +29,6 @@ class APIController extends Controller
         endforeach;
         $predictionsData = $arrOfPredictions;
 
-        dd(date('Y-m-d H:i:s', strtotime('-31 day')));
-
         return view('index', compact('predictionsData'));
     }
 }
