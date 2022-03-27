@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="col-lg-8">
-                    <div class="table-responsive">
+                    <div class="table-responsive table-hover">
                         <table id="prognoze" class="table">
                             <thead>
                                 <tr>
