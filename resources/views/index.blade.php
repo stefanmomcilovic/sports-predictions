@@ -25,8 +25,8 @@
                 </div>
 
                 <div class="col-lg-8">
-                    <div class="table-responsive table-hover">
-                        <table id="prognoze" class="table">
+                    <div class="table-responsive">
+                        <table id="prognoze" class="table table-hover">
                             <thead>
                                 <tr>
                                     <th scope="col">Broj Meča</th>
