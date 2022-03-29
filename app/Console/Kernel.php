@@ -15,8 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('bettingTips:boggio')->everyTwoHours();
-        $schedule->command('bettingTips:kevinGitonga')->everyTwoHours();
+        $schedule->command('bettingTips:boggio')->hourly();
+        $schedule->command('bettingTips:kevinGitonga')->hourly();
         $schedule->command('database:clean')->monthlyOn(25, "00:00");
     }
 
