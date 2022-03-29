@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected function scheduleTimezone()
     {
-        return 'Europe/Belgrade';
+        return 'UTC';
     }
 
     /**
