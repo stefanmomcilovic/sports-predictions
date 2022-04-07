@@ -105,7 +105,7 @@
 
                 <div id="statisticsTable" class="col-lg-8 d-none">
                     <div class="table-responsive">
-                        <table id="prognoze" class="table table-hover">
+                        <table id="statistika" class="table table-hover">
                             <thead>
                                 <tr>
                                     <th scope="col">Broj Meča</th>
@@ -117,8 +117,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if(!empty($predictionsData))
-                                    @foreach($predictionsData as $prediction)
+                                @if(!empty($statisticsForPastMonth))
+                                    @php
+                                        $lostMatches = 0;
+                                        $winMatches = 0;
+                                        $noDataAboutMatch = 0;
+                                    @endphp
+
+                                    @foreach($statisticsForPastMonth as $prediction)
                                         <tr class="
                                         @if(( isset($prediction['status']) && !empty($prediction['status']) ))   
                                             @if($prediction['status'] == 'lost')
@@ -141,15 +147,37 @@
                                             <td>
                                             @if(( isset($prediction['status']) && !empty($prediction['status']) ))   
                                                 @if($prediction['status'] == 'lost')
+                                                    @php
+                                                        $lostMatches++;
+                                                    @endphp
                                                     <span class="text-danger text-capitalize">Gubitan</span>  
                                                 @elseif($prediction['status'] == 'won')
+                                                    @php
+                                                        $winMatches++;
+                                                    @endphp
                                                     <span class="text-success text-capitalize">Dobitan</span>  
+                                                @else
+                                                    @php
+                                                        $noDataAboutMatch++;
+                                                    @endphp
+                                                    <span class="text-capitalize">Nema podatka</span>
                                                 @endif
                                             @elseif(( isset($prediction['match_status']) && !empty($prediction['match_status']) ))
                                                 @if($prediction['match_status'] == 'lost')
+                                                    @php
+                                                        $lostMatches++;
+                                                    @endphp
                                                     <span class="text-danger text-capitalize">Gubitan</span>
                                                 @elseif($prediction['match_status'] == 'won')
+                                                    @php
+                                                        $winMatches++;
+                                                    @endphp
                                                     <span class="text-success text-capitalize">Dobitan</span>
+                                                @else
+                                                    @php
+                                                        $noDataAboutMatch++;
+                                                    @endphp
+                                                    <span class="text-capitalize">Nema podatka</span>
                                                 @endif
                                             @endif
                                             </td>
@@ -172,6 +200,16 @@
                     <div class="bg-light shadow-sm px-3 h-100 reklama-div">
                         <h2 class="reklama-tekst">Vaša reklama ovde!</h2>
                     </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center my-3">
+                <div class="col-lg-6 text-center">
+                    <h2>Statistika zadnjih mesec dana</h2>
+                    <p>Dobitni mečevi: <span class="text-success"> {{ $winMatches }} </span> </p>
+                    <p>Gubitni mečevi: <span class="text-danger"> {{ $lostMatches }} </span> </p>
+                    <p>Nema podataka o meču:  {{ $noDataAboutMatch }} </p>
+                    <p>Ukupno igranih mečeva: {{ count($statisticsForPastMonth) }} </p>
                 </div>
             </div>
         </div>
@@ -208,12 +246,43 @@
                 }
             });
 
+            $("#statistika").DataTable({
+                "aLengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "Sve"]],
+                "iDisplayLength": 25,
+                "language": {
+                    "decimal":        "",
+                    "emptyTable":     "Nema nijedne pronđene prognoze",
+                    "info":           "Prikaz _START_ do _END_ od _TOTAL_ rezultata",
+                    "infoEmpty":      "Prikaz 0 do 0 od 0 rezultata",
+                    "infoFiltered":   "(filtrirano od _MAX_ totalnih rezultata)",
+                    "infoPostFix":    "",
+                    "thousands":      ",",
+                    "lengthMenu":     "Prikaz _MENU_ rezultata",
+                    "loadingRecords": "Učitavanje podataka...",
+                    "processing":     "Obrada podataka...",
+                    "search":         "Pretraži:",
+                    "zeroRecords":    "Nema pronađenih rezultata",
+                    "paginate": {
+                        "first":      "Prva",
+                        "last":       "Zadnja",
+                        "next":       "Sledeća",
+                        "previous":   "Prethodna"
+                    },
+                    "aria": {
+                        "sortAscending":  ": aktivirajte da biste sortirali kolonu uzlazno",
+                        "sortDescending": ": aktivirajte da biste sortirali kolonu opadajuće"
+                    }
+                }
+            });
+
             $("#statisticsLast30Days").click(function(e){
                 e.preventDefault();
                 $("#todaysMatches").removeClass('active');
                 $("#todaysMatches").removeAttr('aria-current');
                 $("#todaysTable").addClass('d-none');
                 $("#statisticsTable").removeClass('d-none');
+
+                $("#heading").text('Statistika zadnjih mesec dana');
 
                 $(this).addClass('active');
                 $(this).attr('aria-current', 'page');
@@ -225,6 +294,8 @@
                 $("#statisticsLast30Days").removeAttr('aria-current');
                 $("#statisticsTable").addClass('d-none');
                 $("#todaysTable").removeClass('d-none');
+
+                $("#heading").text('Današnje Sportske Prognoze');
 
                 $(this).addClass('active');
                 $(this).attr('aria-current', 'page');
